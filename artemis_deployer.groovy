@@ -7,7 +7,13 @@ node {
 		'version/0.2', 
 		'version/0.3', 
 		'version/0.4', 
-		'version/0.5'], 
+		'version/0.5',
+		'version/0.6',
+		'version/0.7',
+		'version/0.8',
+		'version/0.9',
+		'version/0.10',
+		], 
 	description: 'Which version of the app should I deploy? ', 
 	name: 'Version'), 
 	choice(choices: 
@@ -21,7 +27,7 @@ node {
 	stage("Stage1"){
 		timestamps {
 			ws {
-				checkout([$class: 'GitSCM', branches: [[name: '${Version}']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/farrukh90/artemis.git']]])
+				checkout([$class: 'GitSCM', branches: [[name: '${Version}']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/fuchicorp/artemis.git']]])
 		}
 	}
 }
