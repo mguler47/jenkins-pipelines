@@ -21,7 +21,7 @@ node {
 		timestamps {
 			ws{
 				sh '''
-					aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 945548589381.dkr.ecr.us-east-1.amazonaws.com/artemis
+					aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 549828394506.dkr.ecr.us-east-1.amazonaws.com/artemis
 					'''
 		    }
 	    }
@@ -40,7 +40,7 @@ node {
 		timestamps {
 			ws {
 				sh '''
-                    docker tag artemis:${Version} 945548589381.dkr.ecr.us-east-1.amazonaws.com/artemis:${Version}
+                    docker tag artemis:${Version} 549828394506.dkr.ecr.us-east-1.amazonaws.com/artemis:${Version}
                     '''
 				}
 			}
@@ -49,7 +49,7 @@ node {
 	    timestamps {
 			ws {
 				sh '''
-					docker push 945548589381.dkr.ecr.us-east-1.amazonaws.com/artemis:${Version}
+					docker push 549828394506.dkr.ecr.us-east-1.amazonaws.com/artemis:${Version}
 					'''
 			}
 		}
