@@ -1,19 +1,27 @@
  node {
 	properties(
 		[parameters(
-			[choice(choices: 
-			[
-				'0.1', 
-				'0.2', 
-				'0.3', 
-				'0.4', 
-				'0.5'], 
+		[choice(choices: 
+		[
+		'version/0.1', 
+		'version/0.2', 
+		'version/0.3', 
+		'version/0.4', 
+		'version/0.5'], 
 	description: 'Which version of the app should I deploy? ', 
-	name: 'Version')])])
+	name: 'Version'), 
+	choice(choices: 
+	[
+		'dev1.senamina.com', 
+		'qa1.senamina.com', 
+		'stage1.senamina.com', 
+		'prod1.senamina.com'], 
+	description: 'Please provide an environment to build the application', 
+	name: 'ENVIR')])])
 	stage("Stage1"){
 		timestamps {
 			ws {
-				checkout([$class: 'GitSCM', branches: [[name: 'dev']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/fuchicorp/artemis.git']]])
+				checkout([$class: 'GitSCM', branches: [[name: '${Version}']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/fuchicorp/artemis.git']]])
 		}
 	}
 }
@@ -61,4 +69,35 @@
 			}
 		}
 	}
+
+	stage("Clean Up"){
+			timestamps {
+				ws {
+					try {
+						sh '''
+							#!/bin/bash
+							IMAGES=$(ssh centos@dev1.senamina.com docker ps -aq) 
+							for i in \$IMAGES; do
+								ssh centos@dev1.senamina.com docker stop \$i
+								ssh centos@dev1.senamina.com docker rm \$i
+							done 
+							'''
+					} catch(e) {
+						println("Script failed with error: ${e}")
+				        }
+			        }
+		        }
+            }
+
+
+        stage("Run Container"){
+		timestamps {
+			ws {
+				sh '''
+					ssh centos@dev1.senamina.com docker run -dti -p 5001:5000 549828394506.dkr.ecr.us-east-1.amazonaws.com/artemis:${Version}
+					'''
+			}
+		}
+	}
+
 }

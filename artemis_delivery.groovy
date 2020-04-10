@@ -1,16 +1,32 @@
 node {
 	properties(
 		[parameters(
-			[choice(choices: 
-			[
-				'0.1', 
-				'0.2', 
-				'0.3', 
-				'0.4', 
-				'0.5'], 
+		[choice(choices: 
+		[
+		'version/0.1', 
+		'version/0.2', 
+		'version/0.3', 
+		'version/0.4', 
+		'version/0.5'], 
 	description: 'Which version of the app should I deploy? ', 
-	name: 'Version')])])
+	name: 'Version'), 
+	choice(choices: 
+	[
+		'dev1.senamina.com', 
+		'qa1.senamina.com', 
+		'stage1.senamina.com', 
+		'prod1.senamina.com'], 
+	description: 'Please provide an environment to build the application', 
+	name: 'ENVIR')])])
 	stage("Stage1"){
+		timestamps {
+			ws {
+				checkout([$class: 'GitSCM', branches: [[name: '${Version}']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/fuchicorp/artemis.git']]])
+		}
+	}
+}
+
+    stage("Stage1"){
 		timestamps {
 			ws {
                 checkout([$class: 'GitSCM', branches: [[name: '${Version}']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/farrukh90/artemis.git']]])		
