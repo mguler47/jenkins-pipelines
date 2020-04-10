@@ -11,16 +11,16 @@ node {
 	stage("Stage4"){
 		echo "hello"
 }
-	stage("Script"){
+
+stage("Script"){
 		sh label: '', script: 
 		'''#!/bin/bash
-			if [ ! -f /tmp/foo.txt ]; 
+			if [ ! -d /tmp/foo.txt ]; 
 			then
-				echo "File not found!"
+				echo "Folder not found!"
 				echo "Creating a folder"
 				mkdir "/tmp/foo.txt"
-                ls -/ \tmp
-				
+				ls -l /tmp
 			fi
 		'''
 	}
