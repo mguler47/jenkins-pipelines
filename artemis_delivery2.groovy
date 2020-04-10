@@ -1,4 +1,4 @@
- node {
+node {
 	properties(
 		[parameters(
 		[choice(choices: 
