@@ -12,7 +12,7 @@ node {
 	name: 'Version'), 
 	choice(choices: 
 	[
-		'dev1.senamina.com', 
+	    'dev1.senamina.com', 
 		'qa1.senamina.com', 
 		'stage1.senamina.com', 
 		'prod1.senamina.com'], 
@@ -22,9 +22,9 @@ node {
 		timestamps {
 			ws {
 				checkout([$class: 'GitSCM', branches: [[name: '${Version}']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/fuchicorp/artemis.git']]])
-		}
-	}
-}
+		    }
+	    }
+    }
 
     stage("Stage1"){
 		timestamps {
@@ -58,9 +58,9 @@ node {
 				sh '''
                     docker tag artemis:${Version} 549828394506.dkr.ecr.us-east-1.amazonaws.com/artemis:${Version}
                     '''
-				}
 			}
 		}
+	}
     stage("Push Image"){
 	    timestamps {
 			ws {

@@ -22,45 +22,45 @@
 		timestamps {
 			ws {
 				checkout([$class: 'GitSCM', branches: [[name: '${Version}']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/fuchicorp/artemis.git']]])
-		}
-	}
-}
+		    }
+	    }
+    }
 	stage("Get Credentials"){
 		timestamps {
 			ws{
 				sh '''
 					aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 549828394506.dkr.ecr.us-east-1.amazonaws.com/artemis
 					'''
-		}
-	}
-}
+	        }
+	    }
+    }
 	stage("Build Docker Image"){
 		timestamps {
 			ws {
 				sh '''
 					docker build -t artemis:${Version} .
 					'''
-		}
-	}
-}
+		    }
+	    }
+    }
 	stage("Tag Image"){
 		timestamps {
 			ws {
 				sh '''
 					docker tag artemis:${Version} 549828394506.dkr.ecr.us-east-1.amazonaws.com/artemis:latest
 					'''
-		}
-	}
-}
+		    }
+	    }
+    }
 	stage("Push Image"){
 		timestamps {
 			ws {
 				sh '''
 					docker push 549828394506.dkr.ecr.us-east-1.amazonaws.com/artemis:latest
 					'''
-		}
-	}
-}
+		    }
+	    }
+    }
 	stage("Send slack notifications"){
 		timestamps {
 			ws {
