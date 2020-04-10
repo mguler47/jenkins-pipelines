@@ -10,7 +10,7 @@ node {
 		'version/0.5'], 
 	description: 'Which version of the app should I deploy? ', 
 	name: 'Version'), 
-	choice(choices: 
+    choice(choices: 
 	[
 		'dev1.senamina.com', 
 		'qa1.senamina.com', 
@@ -76,10 +76,10 @@ node {
 					try {
 						sh '''
 							#!/bin/bash
-							IMAGES=$(ssh centos@dev1.senamina.com docker ps -aq) 
+							IMAGES=$(ssh centos@${ENVIR} docker ps -aq) 
 							for i in \$IMAGES; do
-								ssh centos@dev1.senamina.com docker stop \$i
-								ssh centos@dev1.senamina.com docker rm \$i
+								ssh centos@${ENVIR} docker stop \$i
+								ssh centos@${ENVIR} docker rm \$i
 							done 
 							'''
 					} catch(e) {
@@ -94,7 +94,7 @@ node {
 		timestamps {
 			ws {
 				sh '''
-					ssh centos@dev1.senamina.com docker run -dti -p 5001:5000 549828394506.dkr.ecr.us-east-1.amazonaws.com/artemis:${Version}
+					ssh centos@${ENVIR} docker run -dti -p 5001:5000 549828394506.dkr.ecr.us-east-1.amazonaws.com/artemis:${Version}
 					'''
 			}
 		}
