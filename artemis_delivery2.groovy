@@ -2,7 +2,7 @@ node {
 	properties(
 		[parameters(
 			[choice(choices: 
-				[
+			[
 				'0.1', 
 				'0.2', 
 				'0.3', 
@@ -13,7 +13,7 @@ node {
 				'0.8',
 				'0.9',
 				'10',
-			], 
+            ], 
 		description: 'Which version of the app should I deploy? ', 
 		name: 'Version')])])
 		stage("Stage1"){
