@@ -1,8 +1,13 @@
 node {
 	properties(
-		[parameters(
+		[buildDiscarder(logRotator(artifactDaysToKeepStr: '', 
+		artifactNumToKeepStr: '', 
+		daysToKeepStr: '', 
+		numToKeepStr: '5')), 
+		disableConcurrentBuilds(),
+		parameters(
 			[choice(choices: 
-			    [
+				[
 				'0.1', 
 				'0.2', 
 				'0.3', 
@@ -12,21 +17,22 @@ node {
 				'0.7',
 				'0.8',
 				'0.9',
-				'10', 
-                ], 
+				'10',
+			], 
+
 		description: 'Which version of the app should I deploy? ', 
 		name: 'Version')])])
 		stage("Stage1"){
 			timestamps {
 				ws {
-					checkout([$class: 'GitSCM', branches: [[name: '${Version}']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/farrukh90/artemis.git']]]) }
+                checkout([$class: 'GitSCM', branches: [[name: '${Version}']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/farrukh90/artemis.git']]])		
 			}
 		}
 		stage("Get Credentials"){
 		timestamps {
 			ws{
 				sh '''
-					aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 549828394506.dkr.ecr.us-east-1.amazonaws.com/artemis:${Version}
+					aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 549828394506.dkr.ecr.us-east-1.amazonaws.com/artemis
 					'''
 				}
 			}
@@ -44,7 +50,7 @@ node {
 			timestamps {
 				ws {
 					sh '''
-						docker tag artemis:${Version} 549828394506.dkr.ecr.us-east-1.amazonaws.com/artemis:${Version}
+                    docker tag artemis:${Version} 549828394506.dkr.ecr.us-east-1.amazonaws.com/artemis:${Version}
 					'''
 					}
 				}
@@ -53,7 +59,8 @@ node {
 			timestamps {
 				ws {
 					sh '''
-						docker push 549828394506.dkr.ecr.us-east-1.amazonaws.com/artemis:${Version}
+					docker push 549828394506.dkr.ecr.us-east-1.amazonaws.com/artemis:${Version}
+						'''
 				}
 			}
 		}
@@ -69,7 +76,7 @@ node {
 			timestamps {
 				ws {
 					sh '''
-                       ssh centos@dev1.senamina.com $(aws ecr get-login --no-include-email --region us-east-1)
+						ssh centos@dev1.senamina.com $(aws ecr get-login --no-include-email --region us-east-1)
 						'''
 				}
 			}
